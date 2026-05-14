@@ -1,0 +1,193 @@
+//Members module for managing clients
+Enum membership_type {
+  monthly
+  yearly
+  premium
+}
+
+Table "members" {
+  "member_id" SERIAL [pk, increment]
+  "first_name" VARCHAR(100) [not null]
+  "last_name" VARCHAR(100) [not null]
+  "phone_number" VARCHAR(30) [unique]
+  "birth_date" DATE
+  "join_date" DATE [not null, default: 'CURRENT_DATE']
+  "membership_type" membership_type [not null]
+  "membership_start_date" DATE [not null]
+  "membership_end_date" DATE [not null, note: 'CHECK (membership_end_date > membership_start_date)']
+}
+
+//Trainers module
+Table "trainer_specializations" {
+  "specialization_id" SERIAL [pk, increment]
+  "name" VARCHAR(50) [not null]
+}
+
+Enum weekday_enum {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
+}
+
+Table "trainer_schedules" {
+  "trainer_schedule_id" SERIAL [pk, increment]
+  "trainer_id" INT [not null]
+  "weekday" weekday_enum [not null]
+  "shift_start" TIME [not null]
+  "shift_end" TIME [not null, note: 'CHECK (shift_end > shift_start)']
+}
+
+Table "trainers" {
+  "trainer_id" SERIAL [pk, increment]
+  "specialization_id" INT [not null]
+  "first_name" VARCHAR(30) [not null]
+  "last_name" VARCHAR(30) [not null]
+  "phone_number" VARCHAR(30) [unique]
+  "employed_date" DATE [not null]
+  "experience_years" INT [not null]
+  "is_active" BOOLEAN [not null, default: true]
+}
+Ref "fk_trainers_specialization": "trainer_specializations"."specialization_id" < "trainers"."specialization_id"
+Ref "fk_trainer_schedule": "trainers"."trainer_id" < "trainer_schedules"."trainer_id"
+
+//Classes and personal training scheduling module
+Table "personal_training_sessions" {
+  "session_id" SERIAL [pk, increment]
+  "member_id" INT [not null]
+  "trainer_id" INT [not null]
+  "location_id" INT
+  "start_time" TIMESTAMP [not null]
+  "duration_minutes" INT [not null, note: 'CHECK duration_minutes > 0']
+  "notes" TEXT
+}
+
+Ref "fk_personal_sessions_member":"members"."member_id" < "personal_training_sessions"."member_id"
+Ref "fk_personal_sessions_trainer":"trainers"."trainer_id" < "personal_training_sessions"."trainer_id"
+Ref "fk_personal_sessions_location":"locations"."location_id" < "personal_training_sessions"."location_id"
+
+Enum booking_status {
+  booked
+  cancelled
+  completed
+}
+
+Table "class_bookings" {
+  "booking_id" SERIAL [pk, increment]
+  "member_id" INT [not null]
+  "class_id" INT [not null]
+  "booking_time" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
+  "status" booking_status [not null, default: 'booked']
+}
+
+Ref "fk_class_bookings_member":"members"."member_id" < "class_bookings"."member_id"
+Ref "fk_class_bookings_class":"class_schedule"."class_id" < "class_bookings"."class_id"
+
+Table "class_types" {
+  "class_type_id" SERIAL [pk, increment]
+  "type_name" VARCHAR(100) [not null]
+  //Aerobics, yoga or other
+  "duration_minutes" INT [not null, note: 'CHECK duration_minutes > 0']
+}
+
+Table "class_schedule" {
+  "class_id" SERIAL [pk, increment]
+  "class_type_id" INT [not null]
+  "trainer_id" INT [not null]
+  "location_id" INT [not null]
+  "start_time" TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+  "end_time" TIMESTAMP [not null, default: 'CURRENT_TIMESTAMP']
+}
+
+Ref "fk_class_schedule_class_type":"class_types"."class_type_id" < "class_schedule"."class_type_id"
+Ref "fk_class_schedule_trainer":"trainers"."trainer_id" < "class_schedule"."trainer_id"
+Ref "fk_class_schedule_location":"locations"."location_id" < "class_schedule"."location_id"
+
+// Equipment management module
+Enum maintenance_status {
+  operational
+  in_maintenance
+  out_of_service
+}
+
+Table "equipment_inventory" {
+  "equipment_id" SERIAL [pk, increment]
+  "name" VARCHAR(50) [not null]
+  "stock" INT [not null, note: 'CHECK stock >= 0']
+  "purchase_date" DATE
+  "maintenance_status" maintenance_status [not null, default: 'operational']
+}
+
+Table "class_equipment" {
+  "class_id" INT [not null]
+  "equipment_id" INT [not null]
+  indexes {  (class_id, equipment_id) [pk]}
+
+  "quantity" INT [not null, note: 'CHECK quantity > 0']
+}
+
+Ref "fk_class_equipment_class":"class_schedule"."class_id" < "class_equipment"."class_id"
+Ref "fk_class_equipment_equipment":"equipment_inventory"."equipment_id" < "class_equipment"."equipment_id"
+
+//Locations for area and rooms management for class and personal training
+Enum location_area_type {
+  common_area
+  private_room
+  gym_floor
+}
+
+Table "locations" {
+  "location_id" SERIAL [pk, increment]
+  "name" VARCHAR(25) [not null]
+  "area_type" location_area_type [not null]
+}
+
+// Client progress tracking module
+Table "member_progress_tracking" {
+  "progress_id" SERIAL [pk, increment]
+  "member_id" INT [not null]
+  "record_date" DATE [not null, default: 'CURRENT_DATE']
+  
+  // Сирі дані для аналітики
+  "current_weight" NUMERIC(5,2)
+  "current_body_fat" NUMERIC(5,2)
+  
+  // Прив'язка до категорій/рейтингів
+  "body_type_id" INT
+  "strength_rating_id" INT
+  "attendance_score_id" INT
+  "personal_strength_rating" NUMERIC(5,2)
+  
+  "notes" TEXT
+  "created_at" TIMESTAMP [default: 'now()']
+}
+
+// Довідник типів статури / цільових показників
+Table "body_physique_types" {
+  "body_type_id" SERIAL [pk, increment]
+  "name" VARCHAR(100) [not null] // Напр: Ectomorph, Athletic
+  "body_fat_percentage_target" NUMERIC(5,2)
+}
+
+// Довідник нормативів сили (коефіцієнт відносно власної ваги)
+Table "strength_standard_levels" {
+  "strength_rating_id" SERIAL [pk, increment]
+  "level_name" VARCHAR(50) // Напр: Beginner, Intermediate, Elite
+  "weight_to_lift_ratio" NUMERIC(5,2) [not null]
+}
+
+// Довідник рівнів відвідуваності
+Table "attendance_achievement_scores" {
+  "attendance_score_id" SERIAL [pk, increment]
+  "score_name" VARCHAR(10) [not null] // Напр: Bronze, Gold
+  "min_days_in_row" INT [not null]
+}
+
+// Relations
+Ref "fk_progress_member":"members"."member_id" < "member_progress_tracking"."member_id"
+Ref "fk_progress_body_type":"body_physique_types"."body_type_id" < "member_progress_tracking"."body_type_id"
+Ref "fk_progress_strength_goal":"strength_standard_levels"."strength_rating_id" < "member_progress_tracking"."strength_rating_id"
+Ref "fk_progress_attendance":"attendance_achievement_scores"."attendance_score_id" < "member_progress_tracking"."attendance_score_id"

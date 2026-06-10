@@ -275,4 +275,3 @@ COMMIT;
 -- DROP TYPE IF EXISTS booking_status CASCADE;
 -- DROP TYPE IF EXISTS maintenance_status CASCADE;
 -- DROP TYPE IF EXISTS location_area_type CASCADE;
-

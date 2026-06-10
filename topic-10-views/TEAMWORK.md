@@ -1,15 +1,15 @@
 # TEAMWORK - Topic 10 (SQL Views)
 
 ## Склад команди
-- Команда: ...
-- Варіант предметної області: ...
+- Команда: 11
+- Варіант предметної області: Fitness Center Management
 
 ## Таблиця внесків
 | Учасник | Роль у команді | Що зроблено | Артефакти / файли |
-|---|---|---|---|
-| ... | ... | ... | ... |
-| ... | ... | ... | ... |
-| ... | ... | ... | ... |
+| Ihor Tsiupka | --- | --- | --- |
+| Lisovyk Anastasia | --- | --- | --- |
+| Heiko Mykola | --- | --- | --- |
+| Mykhailo Lukianiuk | --- | --- | --- |
 
 ## Контекст теми
 Опишіть, хто відповідав за: horizontal/vertical/mixed views, join/subquery/UNION views, view-from-view, `WITH CHECK OPTION`, а також demo-`SELECT` і структуру `views.sql`.

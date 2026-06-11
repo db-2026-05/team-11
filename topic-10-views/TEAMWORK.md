@@ -7,7 +7,7 @@
 ## Таблиця внесків
 | Учасник | Роль у команді | Що зроблено | Артефакти / файли |
 | Ihor Tsiupka | SQL Developer | Horizontal view (view_members_names), Vertical view (view_active_members) |  https://www.loom.com/share/9a4bb217d3f94a7d89222c2eac458acd |
-| Lisovyk Anastasia | SQL Developer | Mixed view (view_premium_members), CHECK OPTION view (view_monthly_members) | --- |
+| Lisovyk Anastasia | SQL Developer | Mixed view (view_premium_members), CHECK OPTION view (view_monthly_members) | https://www.loom.com/share/b211c041d7e348ccbe26ee00eb8a883e |
 | Heiko Mykola | SQL Developer | Join view (view_class_timetable), Subquery view (view_members_with_completed_classes) | --- |
 | Mykhailo Lukianiuk | SQL Developer + Tester | UNION view (view_all_activities), Layered view (view_morning_classes), фінальне тестування файлу | https://www.loom.com/share/8019bf75b6974afda545bc677e8c53e8 |
 

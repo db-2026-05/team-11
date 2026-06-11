@@ -9,7 +9,7 @@
 | Ihor Tsiupka |Наповнення бази даних через інсерти| Згенерував використовуючи ШІ-помічника дані для наповнення бази даних відповідно до завдання а також вручну перевірив та відкоригував логічні невідповідності для фінального варіанту| https://www.loom.com/share/6fad3f6f7a394484a30f366469936bfd |
 | Lisovyk Anastasia | UPDATE scripts | --- | --- |
 | Heiko Mykola | DELETE scripts  | --- | --- |
-| Mykhailo Lukianiuk | Constraint validation scripts / testing | --- | --- |
+| Mykhailo Lukianiuk | Constraint validation scripts / testing | провів написання валідейшн скриптів та перевірив їх спроможність перевіряти правильність констрейнтів у базі | https://www.loom.com/share/1bdebe1f8a1340e78d10290717648875 |
 
 ## Контекст теми
 Опишіть, як розподілили: `INSERT`, `UPDATE`, `DELETE` (кожен робив одну операцію чи працював з конкретними сутностями), підбір реалістичних даних, коментарі до секцій у `dml.sql`, перевірку constraints та узгодженість наборів даних.
